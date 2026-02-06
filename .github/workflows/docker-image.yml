@@ -1,18 +1,29 @@
-name: Docker Image CI
-
+name: Run OpenClaw Bot
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
-
-  build:
-
+  run-gateway:
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          
+      - name: Install and Start
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          OPENCLAW_TELEGRAM_ENABLED: true
+          OPENCLAW_GATEWAY_AUTH: password
+          OPENCLAW_GATEWAY_PASSWORD: Aditya*pro
+        run: |
+          npm install -g openclaw@latest
+          # बॉट सुरू करण्याची कमांड - ही स्टेप कधीच संपणार नाही (जोपर्यंत बॉट चालू आहे)
+          openclaw gateway --port 7860 --allow-unconfigured
+          
