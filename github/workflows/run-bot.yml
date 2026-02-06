@@ -1,0 +1,25 @@
+name: Run OpenClaw Bot
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  run-gateway:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install and Run
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          OPENCLAW_TELEGRAM_ENABLED: true
+          OPENCLAW_GATEWAY_AUTH: password
+          OPENCLAW_GATEWAY_PASSWORD: Aditya*pro
+        run: |
+          npm install -g openclaw@latest
+          openclaw gateway --port 7860 --allow-unconfigured
