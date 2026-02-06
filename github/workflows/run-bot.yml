@@ -22,8 +22,10 @@ jobs:
           OPENCLAW_TELEGRAM_ENABLED: true
           OPENCLAW_GATEWAY_AUTH: password
           OPENCLAW_GATEWAY_PASSWORD: Aditya*pro
+          # तुमचा ID आणि Username मालक म्हणून सेट केला आहे
+          OPENCLAW_TELEGRAM_ADMINS: "8250884206, @AdityaRoyall955"
         run: |
           npm install -g openclaw@latest
-          # बॉट सुरू करण्याची कमांड - ही स्टेप कधीच संपणार नाही (जोपर्यंत बॉट चालू आहे)
+          # बॉट सुरू करण्याची मुख्य कमांड
           openclaw gateway --port 7860 --allow-unconfigured
           
