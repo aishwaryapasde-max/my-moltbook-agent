@@ -1,22 +1,9 @@
-FROM node:22-alpine
-
-# Install build tools needed for the agent
-RUN apk add --no-cache git python3 make g++
-
-# Set internal memory limit and production environment
-ENV NODE_OPTIONS="--max-old-space-size=350"
-ENV NODE_ENV=production
-
-# Install the agent
-RUN npm install -g openclaw@latest --omit=dev
-
-# Create the skills directory
-RUN mkdir -p /root/.moltbot/skills/moltbook
-
+FROM node:22-slim
+RUN apt-get update && apt-get install -y git python3 make g++ && rm -rf /var/lib/apt/lists/*
+# GitHub रॅमसाठी ५ GB सुरक्षित आहे
+ENV NODE_OPTIONS="--max-old-space-size=5000"
+RUN npm install -g openclaw@latest
+RUN mkdir -p /root/.openclaw/skills/moltbook
 WORKDIR /app
-
-# Open the door for Koyeb
-EXPOSE 10000
-
-# THE MOST IMPORTANT LINE: Must use 0.0.0.0
-CMD ["openclaw", "gateway", "--port", "10000", "--host", "0.0.0.0", "--production"]
+EXPOSE 7860
+CMD ["openclaw", "gateway", "--port", "7860", "--allow-unconfigured", "--auth", "password", "--password", "Aditya*pro"]
