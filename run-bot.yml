@@ -24,6 +24,6 @@ jobs:
           OPENCLAW_GATEWAY_PASSWORD: Aditya*pro
         run: |
           npm install -g openclaw@latest
-          # बॉट सुरू करण्याची कमांड
+          # बॉट सुरू करण्याची कमांड - ही स्टेप कधीच संपणार नाही (जोपर्यंत बॉट चालू आहे)
           openclaw gateway --port 7860 --allow-unconfigured
           
