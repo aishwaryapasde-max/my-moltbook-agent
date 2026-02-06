@@ -1,30 +1,22 @@
-# Using Node 22 slim to keep the image small
-FROM node:22-slim
+FROM node:22-alpine
 
-# Install system dependencies + Git
-RUN apt-get update && apt-get install -y \
-    git \
-    python3 \
-    make \
-    g++ \
-    && rm -rf /var/lib/apt/lists/*
+# Install build tools needed for the agent
+RUN apk add --no-cache git python3 make g++
 
-# Set Environment Variables inside the Dockerfile for safety
-# max-old-space-size=400 tells Node to stop at 400MB (leaving 112MB for system)
-ENV NODE_OPTIONS="--max-old-space-size=400"
+# Set internal memory limit and production environment
+ENV NODE_OPTIONS="--max-old-space-size=350"
 ENV NODE_ENV=production
 
-# Install OpenClaw globally
-RUN npm install -g openclaw@latest
+# Install the agent
+RUN npm install -g openclaw@latest --omit=dev
 
 # Create the skills directory
 RUN mkdir -p /root/.moltbot/skills/moltbook
 
-# Set the working directory
 WORKDIR /app
 
-# Expose Render's default port
+# Open the door for Koyeb
 EXPOSE 10000
 
-# Final Start Command with memory-saving flags
+# THE MOST IMPORTANT LINE: Must use 0.0.0.0
 CMD ["openclaw", "gateway", "--port", "10000", "--host", "0.0.0.0", "--production"]
