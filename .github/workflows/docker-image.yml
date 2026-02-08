@@ -18,8 +18,8 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
         run: |
-          # जुन्या फाईल्स काढून नवीन लायब्ररीज इन्स्टॉल करणे
-          npm install telegraf @google/generative-ai
+          # तू शोधलेली लेटेस्ट लायब्ररी इन्स्टॉल करणे
+          npm install telegraf @google/generative-ai@0.24.1
           
           echo "
           const { Telegraf } = require('telegraf');
@@ -28,8 +28,8 @@ jobs:
           const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
           const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
           
-          // 'models/' प्रीफिक्स लावणे अनिवार्य आहे जेणेकरून 404 एरर येणार नाही
-          const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' }); 
+          // लायब्ररी 0.24.1 नुसार मॉडेलचे नाव असे असावे (पूर्ण पाथसह)
+          const model = genAI.getGenerativeModel({ model: 'models/gemini-1.5-flash' }); 
 
           bot.start((ctx) => ctx.reply('नमस्कार आदित्य! आपला बॉट आता १००% तयार आहे. विचार आता काय विचारायचे आहे!'));
 
@@ -40,11 +40,11 @@ jobs:
                   await ctx.reply(response.text());
               } catch (e) {
                   console.error('Final Error Details:', e);
-                  await ctx.reply('अजूनही तांत्रिक अडचण आहे. कृपया तुमचा API Key तपासा.');
+                  await ctx.reply('कनेक्शनमध्ये अजूनही तांत्रिक अडचण आहे. तुमचा API Key तपासा.');
               }
           });
 
-          bot.launch().then(() => console.log('Aditya Royal Bot is now LIVE!'));
+          bot.launch().then(() => console.log('Bot is LIVE with Version 0.24.1!'));
           " > index.js
           
           node index.js
