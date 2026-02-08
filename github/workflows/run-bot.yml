@@ -9,23 +9,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-          
       - name: Install and Start
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           OPENCLAW_TELEGRAM_ENABLED: true
           OPENCLAW_GATEWAY_AUTH: password
-          # तुमचा सीक्रेट कोड आता येथे सुरक्षित आहे
           OPENCLAW_GATEWAY_PASSWORD: ${{ secrets.ADMIN_APPROVE_CODE }}
+          # तुमचा ID येथे 'Owner' म्हणून सेट केला आहे
           OPENCLAW_TELEGRAM_ADMINS: "8250884206"
         run: |
           npm install -g openclaw@latest
-          # बॉट सुरू करताना सिक्रेट पासवर्ड वापरणे
+          # बॉटला 'doctor --fix' सह सुरू करणे जेणेकरून टेलिग्राम पूर्णपणे इनेबल होईल
           openclaw gateway --port 7860 --allow-unconfigured --auth password --password ${{ secrets.ADMIN_APPROVE_CODE }}
           
