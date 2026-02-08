@@ -25,12 +25,12 @@ jobs:
           const { GoogleGenerativeAI } = require('@google/generative-ai');
 
           const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
-          
-          // आपण आता मॉडेलचे नाव योग्य 'gemini-1.5-flash-latest' असे वापरूया
           const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-          const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash-latest' }); 
+          
+          // 'gemini-pro' हे सर्वात जास्त स्टेबल नाव आहे
+          const model = genAI.getGenerativeModel({ model: 'gemini-pro' }); 
 
-          bot.start((ctx) => ctx.reply('नमस्कार आदित्य! तुमचा Gemini AI बॉट आता पूर्णपणे सक्रिय झाला आहे. विचार आता काहीही!'));
+          bot.start((ctx) => ctx.reply('नमस्कार आदित्य! आपला बॉट आता १००% तयार आहे. विचार आता काय विचारयचंय!'));
 
           bot.on('text', async (ctx) => {
               try {
@@ -38,12 +38,12 @@ jobs:
                   const response = await result.response;
                   await ctx.reply(response.text());
               } catch (e) {
-                  console.error('Error Details:', e);
-                  await ctx.reply('API कनेक्शनमध्ये अडचण आली आहे. तुमचा की ' + process.env.GEMINI_API_KEY.substring(0,5) + '... योग्य असल्याची खात्री करा.');
+                  console.error('Error:', e);
+                  await ctx.reply('अजूनही तांत्रिक अडचण आहे. तुमचा API Key तपासा.');
               }
           });
 
-          bot.launch().then(() => console.log('Bot is running with latest model...'));
+          bot.launch().then(() => console.log('Bot is LIVE!'));
           " > index.js
           
           node index.js
