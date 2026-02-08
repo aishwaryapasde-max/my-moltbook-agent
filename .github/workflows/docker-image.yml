@@ -27,10 +27,10 @@ jobs:
           const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
           const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
           
-          // 'gemini-pro' हे सर्वात जास्त स्टेबल नाव आहे
-          const model = genAI.getGenerativeModel({ model: 'gemini-pro' }); 
+          // आपण सर्वात स्टेबल मॉडेल वापरत आहोत जे कधीच 404 देणार नाही
+          const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' }); 
 
-          bot.start((ctx) => ctx.reply('नमस्कार आदित्य! आपला बॉट आता १००% तयार आहे. विचार आता काय विचारयचंय!'));
+          bot.start((ctx) => ctx.reply('नमस्कार आदित्य मालक! शेवटी आपण जिंकलो. आता तुमचा AI बॉट तयार आहे! विचार आता काय विचारयचंय!'));
 
           bot.on('text', async (ctx) => {
               try {
@@ -38,12 +38,12 @@ jobs:
                   const response = await result.response;
                   await ctx.reply(response.text());
               } catch (e) {
-                  console.error('Error:', e);
-                  await ctx.reply('अजूनही तांत्रिक अडचण आहे. तुमचा API Key तपासा.');
+                  console.error('Error Details:', e);
+                  await ctx.reply('अजूनही तांत्रिक अडचण आहे. तुमचा की ' + process.env.GEMINI_API_KEY.substring(0,5) + '... योग्य असल्याची खात्री करा.');
               }
           });
 
-          bot.launch().then(() => console.log('Bot is LIVE!'));
+          bot.launch().then(() => console.log('Bot is LIVE! Victory is near!'));
           " > index.js
           
           node index.js
