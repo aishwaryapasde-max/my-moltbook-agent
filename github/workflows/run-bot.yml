@@ -22,10 +22,10 @@ jobs:
           OPENCLAW_TELEGRAM_ENABLED: true
           OPENCLAW_GATEWAY_AUTH: password
           OPENCLAW_GATEWAY_PASSWORD: Aditya*pro
-          # येथे तुमचा ID टाकल्यामुळे तुम्ही बॉटचे मालक (Owner) बनाल
+          # खालील ओळ तुमचा ताबा (Owner Access) निश्चित करेल
           OPENCLAW_TELEGRAM_ADMINS: "8250884206"
         run: |
           npm install -g openclaw@latest
-          # बॉट सुरू करण्याची मुख्य कमांड
+          # बॉटला थेट तुमच्या आयडीसह सुरू करणे
           openclaw gateway --port 7860 --allow-unconfigured
           
