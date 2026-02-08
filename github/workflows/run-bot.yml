@@ -1,4 +1,4 @@
-name: Simple AI Bot
+name: Aditya Royal AI Bot
 on:
   push:
     branches: [ main ]
@@ -18,9 +18,10 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
         run: |
-          # आपण थेट एक साधी स्क्रिप्ट तयार करू जी एरर देणार नाही
+          # आवश्यक लायब्ररीज इन्स्टॉल करणे
           npm install telegraf @google/generative-ai
           
+          # बॉटची मुख्य स्क्रिप्ट तयार करणे
           echo "
           const { Telegraf } = require('telegraf');
           const { GoogleGenerativeAI } = require('@google/generative-ai');
@@ -29,21 +30,25 @@ jobs:
           const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
           const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
-          bot.start((ctx) => ctx.reply('नमस्कार आदित्य! मी आता पूर्णपणे तयार आहे. विचारा काय विचारायचे आहे.'));
+          // बॉट सुरू झाल्यावरचा मेसेज
+          bot.start((ctx) => ctx.reply('नमस्कार आदित्य मालक! तुमचा नवीन Telegraf AI बॉट आता पूर्णपणे सुरू झाला आहे. विचारा, मी तुमची काय मदत करू शकतो?'));
 
+          // चॅट हाताळणे
           bot.on('text', async (ctx) => {
               try {
                   const result = await model.generateContent(ctx.message.text);
                   const response = await result.response;
                   ctx.reply(response.text());
               } catch (e) {
-                  ctx.reply('क्षस्व, काहीतरी तांत्रिक अडचण आली आहे.');
+                  console.error(e);
+                  ctx.reply('क्षस्व, काहीतरी तांत्रिक अडचण आली आहे. पुन्हा प्रयत्न करा.');
               }
           });
 
           bot.launch();
-          console.log('Bot is running error-free...');
+          console.log('Telegraf Bot is running perfectly...');
           " > index.js
           
+          # बॉट सुरू करणे
           node index.js
           
