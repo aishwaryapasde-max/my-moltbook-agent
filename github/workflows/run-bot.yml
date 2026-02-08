@@ -19,11 +19,12 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           OPENCLAW_TELEGRAM_ENABLED: true
           OPENCLAW_GATEWAY_AUTH: password
+          # Secrets मधून पासवर्ड वाचणे
           OPENCLAW_GATEWAY_PASSWORD: ${{ secrets.ADMIN_APPROVE_CODE }}
-          # तुमचा ID येथे 'Owner' म्हणून सेट केला आहे
+          # तुमचा टेलिग्राम आयडी येथे मालक म्हणून टाकला आहे
           OPENCLAW_TELEGRAM_ADMINS: "8250884206"
         run: |
           npm install -g openclaw@latest
-          # बॉटला 'doctor --fix' सह सुरू करणे जेणेकरून टेलिग्राम पूर्णपणे इनेबल होईल
+          # बॉटला तुमच्या सीक्रेट कोडसह सुरू करणे
           openclaw gateway --port 7860 --allow-unconfigured --auth password --password ${{ secrets.ADMIN_APPROVE_CODE }}
           
