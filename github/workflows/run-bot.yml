@@ -1,30 +1,49 @@
-name: Run OpenClaw Bot
+name: Simple AI Bot
 on:
   push:
     branches: [ main ]
   workflow_dispatch:
 
 jobs:
-  run-gateway:
+  run-bot:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
-      - name: Install and Fix
+          node-version: '20'
+      - name: Install and Run
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          OPENCLAW_TELEGRAM_ENABLED: true
-          OPENCLAW_GATEWAY_AUTH: none
-          OPENCLAW_TELEGRAM_ALLOW_UNCONFIGURED: true
-          OPENCLAW_TELEGRAM_ADMINS: "8250884206"
         run: |
-          npm install -g openclaw@latest
-          # लॉग्जमधील त्रुटी दूर करण्यासाठी पहिली कमांड
-          openclaw doctor --fix
-          # आता बॉट खऱ्या अर्थाने पब्लिक मोडमध्ये सुरू होईल
-          openclaw gateway --port 7860 --allow-unconfigured --auth none --telegram-allow-unconfigured
+          # आपण थेट एक साधी स्क्रिप्ट तयार करू जी एरर देणार नाही
+          npm install telegraf @google/generative-ai
+          
+          echo "
+          const { Telegraf } = require('telegraf');
+          const { GoogleGenerativeAI } = require('@google/generative-ai');
+
+          const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
+          const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+          const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+
+          bot.start((ctx) => ctx.reply('नमस्कार आदित्य! मी आता पूर्णपणे तयार आहे. विचारा काय विचारायचे आहे.'));
+
+          bot.on('text', async (ctx) => {
+              try {
+                  const result = await model.generateContent(ctx.message.text);
+                  const response = await result.response;
+                  ctx.reply(response.text());
+              } catch (e) {
+                  ctx.reply('क्षस्व, काहीतरी तांत्रिक अडचण आली आहे.');
+              }
+          });
+
+          bot.launch();
+          console.log('Bot is running error-free...');
+          " > index.js
+          
+          node index.js
           
