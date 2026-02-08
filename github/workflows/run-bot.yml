@@ -21,11 +21,11 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           OPENCLAW_TELEGRAM_ENABLED: true
           OPENCLAW_GATEWAY_AUTH: password
-          OPENCLAW_GATEWAY_PASSWORD: Aditya*pro
-          # खालील ओळ तुमचा ताबा (Owner Access) निश्चित करेल
+          # तुमचा सीक्रेट कोड आता येथे सुरक्षित आहे
+          OPENCLAW_GATEWAY_PASSWORD: ${{ secrets.ADMIN_APPROVE_CODE }}
           OPENCLAW_TELEGRAM_ADMINS: "8250884206"
         run: |
           npm install -g openclaw@latest
-          # बॉटला थेट तुमच्या आयडीसह सुरू करणे
-          openclaw gateway --port 7860 --allow-unconfigured
+          # बॉट सुरू करताना सिक्रेट पासवर्ड वापरणे
+          openclaw gateway --port 7860 --allow-unconfigured --auth password --password ${{ secrets.ADMIN_APPROVE_CODE }}
           
