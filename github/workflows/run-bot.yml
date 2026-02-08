@@ -18,12 +18,13 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           OPENCLAW_TELEGRAM_ENABLED: true
-          # सुरक्षा पूर्णपणे बंद (Public Access)
+          # सुरक्षा पूर्णपणे बंद (सर्वांसाठी खुला)
           OPENCLAW_GATEWAY_AUTH: none
-          # सर्वांना परवानगी देण्यासाठी हे आवश्यक आहे
+          # टेलिग्रामच्या अंतर्गत सुरक्षेला बायपास करण्यासाठी हे आवश्यक आहे
           OPENCLAW_TELEGRAM_ALLOW_UNCONFIGURED: true
+          OPENCLAW_TELEGRAM_ADMINS: "8250884206"
         run: |
           npm install -g openclaw@latest
-          # '--allow-unconfigured' मुळे बॉट कोणालाही Pairing Code विचारणार नाही
+          # '--allow-unconfigured' आणि 'auth none' मुळे बॉट कोणालाही ब्लॉक करणार नाही
           openclaw gateway --port 7860 --allow-unconfigured --auth none
           
