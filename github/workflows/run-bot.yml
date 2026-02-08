@@ -18,13 +18,10 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           OPENCLAW_TELEGRAM_ENABLED: true
-          OPENCLAW_GATEWAY_AUTH: password
-          # Secrets मधून पासवर्ड वाचणे
-          OPENCLAW_GATEWAY_PASSWORD: ${{ secrets.ADMIN_APPROVE_CODE }}
-          # तुमचा टेलिग्राम आयडी येथे मालक म्हणून टाकला आहे
-          OPENCLAW_TELEGRAM_ADMINS: "8250884206"
+          # येथे आपण पासवर्ड पूर्णपणे काढून टाकला आहे
+          OPENCLAW_GATEWAY_AUTH: none
         run: |
           npm install -g openclaw@latest
-          # बॉटला तुमच्या सीक्रेट कोडसह सुरू करणे
-          openclaw gateway --port 7860 --allow-unconfigured --auth password --password ${{ secrets.ADMIN_APPROVE_CODE }}
+          # '--allow-unconfigured' मुळे बॉट कोणालाही ब्लॉक करणार नाही
+          openclaw gateway --port 7860 --allow-unconfigured --auth none
           
