@@ -1,29 +1,52 @@
-name: Run OpenClaw Bot
+name: Aditya Royal Gemini 3 Bot
 on:
   push:
     branches: [ main ]
   workflow_dispatch:
 
 jobs:
-  run-gateway:
+  run-bot:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
-          
-      - name: Install and Start
+          node-version: '20'
+      - name: Install and Run
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          OPENCLAW_TELEGRAM_ENABLED: true
-          OPENCLAW_GATEWAY_AUTH: password
-          OPENCLAW_GATEWAY_PASSWORD: Aditya*pro
         run: |
-          npm install -g openclaw@latest
-          # बॉट सुरू करण्याची कमांड - ही स्टेप कधीच संपणार नाही (जोपर्यंत बॉट चालू आहे)
-          openclaw gateway --port 7860 --allow-unconfigured
+          # Telegraf आणि Google Generative AI इन्स्टॉल करणे
+          npm install telegraf @google/generative-ai
+          
+          # नवीन स्क्रिप्ट तयार करणे (Gemini 3 Flash मॉडेलसह)
+          echo "
+          const { Telegraf } = require('telegraf');
+          const { GoogleGenerativeAI } = require('@google/generative-ai');
+
+          const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
+          const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+          
+          // येथे Gemini 3 Flash मॉडेल सेट केले आहे
+          const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' }); 
+
+          bot.start((ctx) => ctx.reply('नमस्कार आदित्य मालक! मी Gemini 3 Flash वर आधारित तुमचा नवीन Telegraf बॉट आहे. आता कोणतेही Pairing Code लागणार नाहीत!'));
+
+          bot.on('text', async (ctx) => {
+              try {
+                  const result = await model.generateContent(ctx.message.text);
+                  ctx.reply(result.response.text());
+              } catch (e) {
+                  console.error(e);
+                  ctx.reply('क्षस्व, काहीतरी तांत्रिक अडचण आली आहे.');
+              }
+          });
+
+          bot.launch();
+          console.log('Gemini 3 Bot is now LIVE on Telegraf!');
+          " > index.js
+          
+          node index.js
           
