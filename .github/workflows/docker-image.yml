@@ -1,4 +1,4 @@
-name: Aditya Royal Gemini 3 Bot
+name: Aditya Royal Gemini Bot
 on:
   push:
     branches: [ main ]
@@ -18,10 +18,10 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
         run: |
-          # Telegraf आणि Google Generative AI इन्स्टॉल करणे
+          # आवश्यक लायब्ररीज इन्स्टॉल करणे
           npm install telegraf @google/generative-ai
           
-          # नवीन स्क्रिप्ट तयार करणे (Gemini 3 Flash मॉडेलसह)
+          # मुख्य बॉट स्क्रिप्ट (index.js) तयार करणे
           echo "
           const { Telegraf } = require('telegraf');
           const { GoogleGenerativeAI } = require('@google/generative-ai');
@@ -29,24 +29,35 @@ jobs:
           const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
           const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
           
-          // येथे Gemini 3 Flash मॉडेल सेट केले आहे
+          // आपण सर्वात लेटेस्ट 'Gemini 2.0 Flash' मॉडेल वापरत आहोत
           const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' }); 
 
-          bot.start((ctx) => ctx.reply('नमस्कार आदित्य मालक! मी Gemini 3 Flash वर आधारित तुमचा नवीन Telegraf बॉट आहे. आता कोणतेही Pairing Code लागणार नाहीत!'));
+          bot.start((ctx) => ctx.reply('नमस्कार आदित्य मालक! मी तुमचा Gemini AI बॉट आता पूर्णपणे सक्रिय झालो आहे. विचारा, मी तुमची काय मदत करू शकतो?'));
 
           bot.on('text', async (ctx) => {
               try {
+                  // तुमच्या मेसेजला Gemini कडून उत्तर मिळवणे
                   const result = await model.generateContent(ctx.message.text);
-                  ctx.reply(result.response.text());
+                  const response = await result.response;
+                  const text = response.text();
+                  
+                  // उत्तर टेलिग्रामवर पाठवणे
+                  await ctx.reply(text);
               } catch (e) {
-                  console.error(e);
-                  ctx.reply('क्षस्व, काहीतरी तांत्रिक अडचण आली आहे.');
+                  console.error('Error Details:', e);
+                  await ctx.reply('मला उत्तर देता आले नाही. कृपया तुमचा Gemini API Key ' + process.env.GEMINI_API_KEY.substring(0,5) + '... वैध आहे का ते तपासा.');
               }
           });
 
-          bot.launch();
-          console.log('Gemini 3 Bot is now LIVE on Telegraf!');
+          bot.launch().then(() => {
+              console.log('Telegraf Bot is now LIVE and working error-free!');
+          });
+
+          // प्रोसेस चालू ठेवण्यासाठी
+          process.once('SIGINT', () => bot.stop('SIGINT'));
+          process.once('SIGTERM', () => bot.stop('SIGTERM'));
           " > index.js
           
+          # बॉट सुरू करणे
           node index.js
           
