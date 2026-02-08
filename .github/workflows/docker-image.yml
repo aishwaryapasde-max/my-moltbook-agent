@@ -18,7 +18,6 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
         run: |
-          # जुने सर्व काही काढून नवीन लायब्ररीज इन्स्टॉल करणे
           npm install telegraf @google/generative-ai
           
           echo "
@@ -26,12 +25,12 @@ jobs:
           const { GoogleGenerativeAI } = require('@google/generative-ai');
 
           const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
-          const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
           
-          // 'Gemini 3' ऐवजी हे सर्वात स्टेबल मॉडेल वापरा
-          const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' }); 
+          // आपण आता मॉडेलचे नाव योग्य 'gemini-1.5-flash-latest' असे वापरूया
+          const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+          const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash-latest' }); 
 
-          bot.start((ctx) => ctx.reply('नमस्कार आदित्य मालक! आता तुमचा Gemini AI बॉट पूर्णपणे तयार आहे. विचारा, काय मदत करू?'));
+          bot.start((ctx) => ctx.reply('नमस्कार आदित्य! तुमचा Gemini AI बॉट आता पूर्णपणे सक्रिय झाला आहे. विचार आता काहीही!'));
 
           bot.on('text', async (ctx) => {
               try {
@@ -40,12 +39,11 @@ jobs:
                   await ctx.reply(response.text());
               } catch (e) {
                   console.error('Error Details:', e);
-                  // जर परत एरर आला तर हा मेसेज येईल
-                  await ctx.reply('मला उत्तर देता आले नाही. तुमचा API Key योग्य आहे की नाही हे एकदा तपासा.');
+                  await ctx.reply('API कनेक्शनमध्ये अडचण आली आहे. तुमचा की ' + process.env.GEMINI_API_KEY.substring(0,5) + '... योग्य असल्याची खात्री करा.');
               }
           });
 
-          bot.launch().then(() => console.log('Bot is now LIVE!'));
+          bot.launch().then(() => console.log('Bot is running with latest model...'));
           " > index.js
           
           node index.js
